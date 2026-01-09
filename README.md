@@ -49,7 +49,7 @@ cd tf-aws-infra-fork
 terraform apply -var-file="devv.tfvars"
 ```
 
-### Manual Deployment
+### Deployment
 ```bash
 aws lambda update-function-code \
   --function-name emailVerificationLambda-devv \

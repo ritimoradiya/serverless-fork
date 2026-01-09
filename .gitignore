@@ -1,4 +1,4 @@
-# Logs
+# Logsss
 logs
 *.log
 npm-debug.log*
@@ -78,7 +78,7 @@ web_modules/
 .next
 out
 
-# Nuxt.js build / generate output
+# Nuxt.js build output
 .nuxt
 dist
 
@@ -137,3 +137,47 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# ===== LAMBDA/SERVERLESS SPECIFIC =====
+
+# Lambda deployment packages
+*.zip
+lambda/
+email-verification.zip
+
+# AWS SAM
+.aws-sam/
+
+# Terraform state (if any)
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Test files
+.jest-cache/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
