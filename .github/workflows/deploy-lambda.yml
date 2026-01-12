@@ -1,0 +1,62 @@
+name: Deploy Lambda Function
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Only deploy on push to main, not on PRs
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: ./src
+        run: |
+          npm ci --production
+
+      - name: Create deployment package
+        run: |
+          cd src
+          zip -r ../lambda-deployment.zip . -x "*.git*" -x "*test*"
+          cd ..
+          ls -lh lambda-deployment.zip
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Update Lambda function
+        run: |
+          aws lambda update-function-code \
+            --function-name emailVerificationLambda-devv \
+            --zip-file fileb://lambda-deployment.zip \
+            --publish
+
+      - name: Wait for update to complete
+        run: |
+          aws lambda wait function-updated \
+            --function-name emailVerificationLambda-devv
+
+      - name: Get function info
+        run: |
+          aws lambda get-function \
+            --function-name emailVerificationLambda-devv \
+            --query 'Configuration.[FunctionName,Version,LastModified,Runtime,CodeSize]' \
+            --output table

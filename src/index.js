@@ -40,8 +40,8 @@ exports.handler = async (event) => {
       };
     }
 
-    // Use HTTP and token from webapp
-    const verificationLink = `http://${DOMAIN}/v1/user/verify?email=${encodeURIComponent(email)}&token=${token}`;
+    // Use HTTPS and token from webapp
+    const verificationLink = `https://${DOMAIN}/v1/user/verify?email=${encodeURIComponent(email)}&token=${token}`;
 
     // Send email via SES
     await sendVerificationEmail(email, firstName, verificationLink);
